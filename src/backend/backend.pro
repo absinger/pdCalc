@@ -16,7 +16,7 @@ HEADERS += Stack.h \
     Command.h \
     CommandManager.h \
     CommandRepository.h \
-    CommandExecutor.h \
+    CommandDispatcher.h \
     CoreCommands.h \
     StoredProcedure.h \
     PluginLoader.h \
@@ -35,7 +35,7 @@ SOURCES += Stack.cpp \
     StackPluginInterface.cpp \
     CommandManager.cpp \
     CommandRepository.cpp \
-    CommandExecutor.cpp \
+    CommandDispatcher.cpp \
     Command.cpp \
     CoreCommands.cpp \
     StoredProcedure.cpp \

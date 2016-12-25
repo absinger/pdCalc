@@ -31,7 +31,7 @@ using std::vector;
 
 namespace pdCalc {
 
-CommandIssuedObserver::CommandIssuedObserver(CommandExecutor& ce)
+CommandIssuedObserver::CommandIssuedObserver(CommandDispatcher& ce)
 : Observer("CommandIssued")
 , ce_(ce)
 { }

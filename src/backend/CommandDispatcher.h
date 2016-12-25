@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with pdCalc; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef COMMAND_EXECUTOR_H
-#define COMMAND_EXECUTOR_H
+#ifndef COMMAND_DISPATCHER_H
+#define COMMAND_DISPATCHER_H
 
 #include <string>
 #include <memory>
@@ -28,24 +28,24 @@ namespace pdCalc {
 
 class UserInterface;
 
-class CommandExecutor
+class CommandDispatcher
 {
-    class CommandExecutorImpl;
+    class CommandDispatcherImpl;
 
 public:
-    explicit CommandExecutor(UserInterface& ui);
-    ~CommandExecutor();
+    explicit CommandDispatcher(UserInterface& ui);
+    ~CommandDispatcher();
 
     void commandEntered(const std::string& command);
 
 private:
-    CommandExecutor(const CommandExecutor&) = delete;
-    CommandExecutor(CommandExecutor&&) = delete;
-    CommandExecutor& operator=(const CommandExecutor&) = delete;
-    CommandExecutor& operator=(CommandExecutor&&) = delete;
+    CommandDispatcher(const CommandDispatcher&) = delete;
+    CommandDispatcher(CommandDispatcher&&) = delete;
+    CommandDispatcher& operator=(const CommandDispatcher&) = delete;
+    CommandDispatcher& operator=(CommandDispatcher&&) = delete;
 
 
-    std::unique_ptr<CommandExecutorImpl> pimpl_;
+    std::unique_ptr<CommandDispatcherImpl> pimpl_;
 };
 
 }

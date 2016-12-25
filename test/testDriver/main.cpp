@@ -22,7 +22,7 @@
 #include "../pluginsTest/HyperbolicLnPluginTest.h"
 #include "../guiTest/DisplayTest.h"
 #include "../cliTest/CliTest.h"
-#include "../backendTest/CommandExecutorTest.h"
+#include "../backendTest/CommandDispatcherTest.h"
 #include "../backendTest/CommandManagerTest.h"
 #include "../backendTest/CommandRepositoryTest.h"
 #include "../backendTest/CoreCommandsTest.h"
@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
     CliTest ct;
     passFail["CliTest"] = QTest::qExec(&ct, args);
 
-    CommandExecutorTest cet;
-    passFail["CommandExecutorTest"] = QTest::qExec(&cet, args);
+    CommandDispatcherTest cet;
+    passFail["CommandDispatcherTest"] = QTest::qExec(&cet, args);
 
     CommandManagerTest cmt;
     passFail["CommandManagerTest"] = QTest::qExec(&cmt, args);

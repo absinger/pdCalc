@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with pdCalc; if not, see <http://www.gnu.org/licenses/>.
 
-#include "CommandExecutor.h"
+#include "CommandDispatcher.h"
 #include "CommandRepository.h"
 #include "CommandManager.h"
 #include "CoreCommands.h"
@@ -38,10 +38,10 @@ using std::istringstream;
 
 namespace pdCalc {
 
-class CommandExecutor::CommandExecutorImpl
+class CommandDispatcher::CommandDispatcherImpl
 {
 public:
-    explicit CommandExecutorImpl(UserInterface& ui);
+    explicit CommandDispatcherImpl(UserInterface& ui);
 
     void executeCommand(string command);
 
@@ -56,11 +56,11 @@ private:
     UserInterface& ui_;
 };
 
-CommandExecutor::CommandExecutorImpl::CommandExecutorImpl(UserInterface& ui)
+CommandDispatcher::CommandDispatcherImpl::CommandDispatcherImpl(UserInterface& ui)
 : ui_(ui)
 { }
 
-void CommandExecutor::CommandExecutorImpl::executeCommand(string command)
+void CommandDispatcher::CommandDispatcherImpl::executeCommand(string command)
 {
     // entry of a number simply goes onto the the stack
     double d;
@@ -92,7 +92,7 @@ void CommandExecutor::CommandExecutorImpl::executeCommand(string command)
     return;
 }
 
-void CommandExecutor::CommandExecutorImpl::handleCommand(CommandPtr c)
+void CommandDispatcher::CommandDispatcherImpl::handleCommand(CommandPtr c)
 {
     try
     {
@@ -106,7 +106,7 @@ void CommandExecutor::CommandExecutorImpl::handleCommand(CommandPtr c)
     return;
 }
 
-void CommandExecutor::CommandExecutorImpl::printHelp() const
+void CommandDispatcher::CommandDispatcherImpl::printHelp() const
 {
     ostringstream oss;
     set<string> allCommands = CommandRepository::Instance().getAllCommandNames();
@@ -126,7 +126,7 @@ void CommandExecutor::CommandExecutorImpl::printHelp() const
 
 // uses a C++11 regular expression to check if this is a valid double number
 // if so, converts it into one and returns it
-bool CommandExecutor::CommandExecutorImpl::isNum(const string& s, double& d)
+bool CommandDispatcher::CommandDispatcherImpl::isNum(const string& s, double& d)
 {
      std::regex dpRegex("((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?((e|E)((\\+|-)?)[[:digit:]]+)?");
      bool isNumber{ std::regex_match(s, dpRegex) };
@@ -139,24 +139,24 @@ bool CommandExecutor::CommandExecutorImpl::isNum(const string& s, double& d)
      return isNumber;
 }
 
-void CommandExecutor::CommandExecutorImpl::toLower(string& s)
+void CommandDispatcher::CommandDispatcherImpl::toLower(string& s)
 {
     std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 }
 
-void CommandExecutor::commandEntered(const std::string& command)
+void CommandDispatcher::commandEntered(const std::string& command)
 {
     pimpl_->executeCommand(command);
 
     return;
 }
 
-CommandExecutor::CommandExecutor(UserInterface& ui)
+CommandDispatcher::CommandDispatcher(UserInterface& ui)
 {
-    pimpl_ = std::make_unique<CommandExecutorImpl>(ui);
+    pimpl_ = std::make_unique<CommandDispatcherImpl>(ui);
 }
 
-CommandExecutor::~CommandExecutor()
+CommandDispatcher::~CommandDispatcher()
 { }
 
 }

@@ -20,7 +20,7 @@
 #define APP_OBSERVERS_H
 
 #include "utilities/Observer.h"
-#include "backend/CommandExecutor.h"
+#include "backend/CommandDispatcher.h"
 
 namespace pdCalc {
 
@@ -29,12 +29,12 @@ class UserInterface;
 class CommandIssuedObserver : public Observer
 {
 public:
-    explicit CommandIssuedObserver(CommandExecutor& ce);
+    explicit CommandIssuedObserver(CommandDispatcher& ce);
 
 private:
     void notifyImpl(std::shared_ptr<EventData>) override;
 
-    CommandExecutor& ce_;
+    CommandDispatcher& ce_;
 };
 
 class StackUpdatedObserver : public Observer

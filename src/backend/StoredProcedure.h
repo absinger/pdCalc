@@ -26,7 +26,7 @@
 
 namespace pdCalc {
 
-class CommandExecutor;
+class CommandDispatcher;
 class UserInterface;
 
 class StoredProcedure : public Command
@@ -49,7 +49,7 @@ private:
     const char* helpMessageImpl() const noexcept override;
 
     mutable std::unique_ptr<Tokenizer> tokenizer_;
-    std::unique_ptr<CommandExecutor> ce_;
+    std::unique_ptr<CommandDispatcher> ce_;
     std::string filename_;
     bool first_ = true;
 };

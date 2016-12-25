@@ -16,10 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with pdCalc; if not, see <http://www.gnu.org/licenses/>.
 
-#include "CommandExecutorTest.h"
+#include "CommandDispatcherTest.h"
 #include "src/utilities/UserInterface.h"
 #include "src/backend/CoreCommands.h"
-#include "src/backend/CommandExecutor.h"
+#include "src/backend/CommandDispatcher.h"
 #include "src/backend/CommandRepository.h"
 #include "src/backend/Stack.h"
 
@@ -57,12 +57,12 @@ double TestInterface::top() const
 
 }
 
-void CommandExecutorTest::testCommandExecutor()
+void CommandDispatcherTest::testCommandDispatcher()
 {
     pdCalc::CommandRepository::Instance().clearAllCommands();
     pdCalc::Stack::Instance().clear();
     TestInterface ui;
-    pdCalc::CommandExecutor ce{ui};
+    pdCalc::CommandDispatcher ce{ui};
 
     ce.commandEntered("+");
     QCOMPARE(ui.getLastMessage(), string{"Command + is not a known command"});

@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with pdCalc; if not, see <http://www.gnu.org/licenses/>.
 
-#ifndef COMMAND_EXECUTOR_TEST_H
-#define COMMAND_EXECUTOR_TEST_H
+#ifndef COMMAND_DISPATCHER_TEST_H
+#define COMMAND_DISPATCHER_TEST_H
 
 #include <QtTest/QtTest>
 
@@ -26,12 +26,12 @@ namespace pdCalc {
     class Command;
 }
 
-class CommandExecutorTest : public QObject
+class CommandDispatcherTest : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void testCommandExecutor();
+    void testCommandDispatcher();
 };
 
 #endif

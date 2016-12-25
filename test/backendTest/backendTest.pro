@@ -16,14 +16,14 @@ HEADERS += StackTest.h \
     CommandManagerTest.h \
     CommandRepositoryTest.h \
     CoreCommandsTest.h \
-    CommandExecutorTest.h \
+    CommandDispatcherTest.h \
     StoredProcedureTest.h \
     PluginLoaderTest.h
 SOURCES += StackTest.cpp \
     CommandManagerTest.cpp \
     CommandRepositoryTest.cpp \
     CoreCommandsTest.cpp \
-    CommandExecutorTest.cpp \
+    CommandDispatcherTest.cpp \
     StoredProcedureTest.cpp \
     PluginLoaderTest.cpp
 

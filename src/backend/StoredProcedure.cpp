@@ -17,7 +17,7 @@
 // along with pdCalc; if not, see <http://www.gnu.org/licenses/>.
 
 #include "StoredProcedure.h"
-#include "CommandExecutor.h"
+#include "CommandDispatcher.h"
 #include "utilities/Exception.h"
 #include "utilities/Tokenizer.h"
 #include <fstream>
@@ -29,7 +29,7 @@ namespace pdCalc {
 StoredProcedure::StoredProcedure(UserInterface& ui, const string& filename)
 : filename_{filename}
 {
-    ce_ = std::make_unique<CommandExecutor>(ui);
+    ce_ = std::make_unique<CommandDispatcher>(ui);
 }
 
 StoredProcedure::~StoredProcedure()

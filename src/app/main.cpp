@@ -23,7 +23,7 @@
 #include <fstream>
 #include "ui/cli/Cli.h"
 #include "AppObservers.h"
-#include "backend/CommandExecutor.h"
+#include "backend/CommandDispatcher.h"
 #include <memory>
 #include "backend/Stack.h"
 #include "utilities/Exception.h"
@@ -47,7 +47,7 @@ using std::unique_ptr;
 using std::make_unique;
 using pdCalc::Cli;
 using pdCalc::Stack;
-using pdCalc::CommandExecutor;
+using pdCalc::CommandDispatcher;
 using pdCalc::Observer;
 using std::ostream;
 using std::istream;
@@ -126,7 +126,7 @@ void usage()
     exit(0);
 }
 
-void setupUi(UserInterface& ui, CommandExecutor& ce)
+void setupUi(UserInterface& ui, CommandDispatcher& ce)
 {
     RegisterCoreCommands(ui);
 
@@ -216,10 +216,10 @@ try
 
     MainWindow gui{argc, argv};
 
-    // PluginLoader must be before CommandExecutor so that memory on Command stack
+    // PluginLoader must be before CommandDispatcher so that memory on Command stack
     // is released before plugins are freed
     PluginLoader loader;
-    CommandExecutor ce{gui};
+    CommandDispatcher ce{gui};
 
     setupUi(gui, ce);
     set<string> injectedCommands{setupPlugins(gui, loader)};
@@ -247,10 +247,10 @@ void runBatch(const string& in, const string& out)
 
     Cli cli{ io.in(), io.out() };
 
-    // PluginLoader must be before CommandExecutor so that memory on Command stack
+    // PluginLoader must be before CommandDispatcher so that memory on Command stack
     // is released before plugins are freed
     PluginLoader loader;
-    CommandExecutor ce{cli};
+    CommandDispatcher ce{cli};
 
     setupUi(cli, ce);
     set<string> injectedCommands{setupPlugins(cli, loader)};
@@ -268,10 +268,10 @@ try
 {
     Cli cli{cin, cout};
 
-    // PluginLoader must be before CommandExecutor so that memory on Command stack
+    // PluginLoader must be before CommandDispatcher so that memory on Command stack
     // is released before plugins are freed
     PluginLoader loader;
-    CommandExecutor ce{cli};
+    CommandDispatcher ce{cli};
 
     setupUi(cli, ce);
     set<string> injectedCommands{setupPlugins(cli, loader)};
