@@ -43,12 +43,11 @@ class CommandDispatcher::CommandDispatcherImpl
 public:
     explicit CommandDispatcherImpl(UserInterface& ui);
 
-    void executeCommand(string command);
+    void executeCommand(const string& command);
 
 
 private:
     bool isNum(const string&, double& d);
-    void toLower(string& s);
     void handleCommand(CommandPtr command);
     void printHelp() const;
 
@@ -60,7 +59,7 @@ CommandDispatcher::CommandDispatcherImpl::CommandDispatcherImpl(UserInterface& u
 : ui_(ui)
 { }
 
-void CommandDispatcher::CommandDispatcherImpl::executeCommand(string command)
+void CommandDispatcher::CommandDispatcherImpl::executeCommand(const string& command)
 {
     // entry of a number simply goes onto the the stack
     double d;
@@ -137,11 +136,6 @@ bool CommandDispatcher::CommandDispatcherImpl::isNum(const string& s, double& d)
      }
 
      return isNumber;
-}
-
-void CommandDispatcher::CommandDispatcherImpl::toLower(string& s)
-{
-    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 }
 
 void CommandDispatcher::commandEntered(const std::string& command)
