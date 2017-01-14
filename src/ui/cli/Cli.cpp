@@ -37,6 +37,7 @@ public:
     CliImpl(Cli&, istream& in, ostream& out);
     void postMessage(const string& m);
     void execute(bool suppressStartupMessage, bool echo);
+    void stackChanged();
 
 private:
     void startupMessage();
@@ -92,21 +93,7 @@ void Cli::CliImpl::execute(bool suppressStartupMessage, bool echo)
     return;
 }
 
-Cli::Cli(istream& in, ostream& out)
-{
-    pimpl_ = std::make_unique<CliImpl>(*this, in, out);
-}
-
-Cli::~Cli()
-{ }
-
-void Cli::postMessage(const string& m)
-{
-    pimpl_->postMessage(m);
-    return;
-}
-
-void Cli::stackChanged()
+void Cli::CliImpl::stackChanged()
 {
     unsigned int nElements{4};
     auto v = Stack::Instance().getElements(nElements);
@@ -130,7 +117,27 @@ void Cli::stackChanged()
         --j;
     }
 
-    pimpl_->postMessage( oss.str() );
+    postMessage( oss.str() );
+}
+
+Cli::Cli(istream& in, ostream& out)
+{
+    pimpl_ = std::make_unique<CliImpl>(*this, in, out);
+}
+
+Cli::~Cli()
+{ }
+
+void Cli::postMessage(const string& m)
+{
+    pimpl_->postMessage(m);
+    return;
+}
+
+void Cli::stackChanged()
+{
+    pimpl_->stackChanged();
+    return;
 }
 
 void Cli::execute(bool suppressStartupMessage, bool echo)
