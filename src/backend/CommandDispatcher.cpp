@@ -127,7 +127,7 @@ void CommandDispatcher::CommandDispatcherImpl::printHelp() const
 // if so, converts it into one and returns it
 bool CommandDispatcher::CommandDispatcherImpl::isNum(const string& s, double& d)
 {
-     std::regex dpRegex("((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?((e|E)((\\+|-)?)[[:digit:]]+)?");
+     std::regex dpRegex("((\\+|-)?[[:digit:]]*)(\\.(([[:digit:]]+)?))?((e|E)((\\+|-)?)[[:digit:]]+)?");
      bool isNumber{ std::regex_match(s, dpRegex) };
 
      if(isNumber)
