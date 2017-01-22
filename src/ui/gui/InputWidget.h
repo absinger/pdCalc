@@ -20,6 +20,8 @@
 #define INPUT_WIDGET_H
 
 #include <QWidget>
+#include <string>
+#include <memory>
 
 class QGridLayout;
 
@@ -30,16 +32,26 @@ class InputWidget : public QWidget
     class InputWidgetImpl;
     Q_OBJECT
 public:
-    explicit InputWidget(QGridLayout* layout, QWidget *parent = nullptr);
-    
+    explicit InputWidget(QWidget *parent = nullptr);
+    ~InputWidget();
+
+    void addCommandButton(const std::string& dispPrimaryCmd, const std::string& primaryCmd,
+        const std::string& dispShftCmd, const std::string& shftCmd);
+
+    void setupFinalButtons();
+    QGridLayout* getLayout();
+
 signals:
     void characterEntered(char c);
     void enterPressed();
     void backspacePressed();
     void plusMinusPressed();
-    
+    void commandEntered(std::string, std::string);
+    void shiftPressed();
+    void procedurePressed();
+
 private:
-    InputWidgetImpl* pimpl_;
+    std::unique_ptr<InputWidgetImpl> pimpl_;
 };
 
 }

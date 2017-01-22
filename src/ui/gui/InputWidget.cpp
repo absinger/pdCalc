@@ -22,9 +22,11 @@
 #include <iostream>
 #include "CommandButton.h"
 #include <QGridLayout>
+#include "LookAndFeel.h"
 
 using std::cout;
 using std::endl;
+using std::string;
 
 using std::vector;
 
@@ -34,7 +36,10 @@ class InputWidget::InputWidgetImpl : public QWidget
 {
     Q_OBJECT
 public:
-    InputWidgetImpl(QGridLayout* layout, pdCalc::InputWidget* parent);
+    InputWidgetImpl(pdCalc::InputWidget* parent);
+    void addCommandButton(const string& dispPrimaryCmd, const string& primaryCmd, const string& dispShftCmd, const string& shftCmd);
+    void setupFinalButtons();
+    QGridLayout* getLayout() { return layout_; }
 
 private slots:
     void onEex();
@@ -55,9 +60,11 @@ private:
     void allocateButtons();
     void setupShortcuts();
     void makeConnections();
-    void layoutButtons(QGridLayout* layout);
+    void layoutButtons();
 
-    pdCalc::InputWidget& parent_;
+    pdCalc::InputWidget* parent_;
+    int nAddedButtons_;
+    QGridLayout* layout_;
 
     CommandButton* eexButton_;
     CommandButton* decimalButton_;
@@ -74,16 +81,29 @@ private:
     CommandButton* sevenButton_;
     CommandButton* eightButton_;
     CommandButton* nineButton_;
+    CommandButton* plusButton_;
+    CommandButton* minusButton_;
+    CommandButton* multiplyButton_;
+    CommandButton* divideButton_;
+    CommandButton* sinButton_;
+    CommandButton* cosButton_;
+    CommandButton* tanButton_;
+    CommandButton* powButton_;
+    CommandButton* shiftButton_;
 };
 
-InputWidget::InputWidgetImpl::InputWidgetImpl(QGridLayout* layout, pdCalc::InputWidget* parent)
+InputWidget::InputWidgetImpl::InputWidgetImpl(pdCalc::InputWidget* parent)
 : QWidget{parent}
-, parent_(*parent)
+, parent_(parent)
+, nAddedButtons_{0}
 {
     allocateButtons();
     setupShortcuts();
     makeConnections();
-    layoutButtons(layout);
+    layout_ = new QGridLayout;
+    layoutButtons();
+
+    return;
 }
 
 void InputWidget::InputWidgetImpl::allocateButtons()
@@ -103,6 +123,15 @@ void InputWidget::InputWidgetImpl::allocateButtons()
     sevenButton_ = new CommandButton{"7", "7", this};
     eightButton_ = new CommandButton{"8", "8", this};
     nineButton_ = new CommandButton{"9", "9", this};
+    plusButton_ = new CommandButton{"+", "+", this};
+    minusButton_ = new CommandButton{"-", "-", this};
+    multiplyButton_ = new CommandButton{"*", "*", this};
+    divideButton_ = new CommandButton{"/", "/", this};
+    sinButton_ = new CommandButton{"sin", "sin", "asin", "arcsin", this};
+    cosButton_ = new CommandButton{"cos", "cos", "acos", "arccos", this};
+    tanButton_ = new CommandButton{"tan", "tan", "atan", "arctan", this};
+    powButton_ = new CommandButton{"pow", "pow", "root", "root", this};
+    shiftButton_ = new CommandButton{"Shift", "", this};
 
     return;
 }
@@ -137,13 +166,28 @@ void InputWidget::InputWidgetImpl::setupShortcuts()
     eightButton_->registerShortcut(Qt::Key_8);
     nineButton_->registerShortcut(Qt::Key_9);
 
+    // oddly required for the + above the = on my US keyboard
+    plusButton_->registerShortcut(QKeySequence{Qt::SHIFT | Qt::Key_Plus});
+    plusButton_->registerShortcut(QKeySequence{Qt::Key_Plus});
+
+    minusButton_->registerShortcut(Qt::Key_Minus);
+
+    // oddly required for the * above the 8 on my US keyboard
+    multiplyButton_->registerShortcut(QKeySequence{Qt::SHIFT | Qt::Key_Asterisk});
+    multiplyButton_->registerShortcut(QKeySequence{Qt::Key_Asterisk});
+
+    divideButton_->registerShortcut(Qt::Key_Slash);
+
+    shiftButton_->registerShortcut(Qt::Key_S);
+    shiftButton_->setButtonTextColor( LookAndFeel::Instance().getShiftColor() );
+
     return;
 }
 
 void InputWidget::InputWidgetImpl::makeConnections()
 {
-    connect(enterButton_, SIGNAL(clicked(std::string, std::string)), &parent_, SIGNAL(enterPressed()));
-    connect(backspaceButton_, SIGNAL(clicked(std::string, std::string)), &parent_, SIGNAL(backspacePressed()));
+    connect(enterButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(enterPressed()));
+    connect(backspaceButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(backspacePressed()));
 
     connect(eexButton_, SIGNAL(clicked(std::string, std::string)), this, SLOT(onEex()));
     connect(decimalButton_, SIGNAL(clicked(std::string, std::string)), this, SLOT(onDecimal()));
@@ -159,98 +203,176 @@ void InputWidget::InputWidgetImpl::makeConnections()
     connect(sevenButton_, SIGNAL(clicked(std::string, std::string)), this, SLOT(onSeven()));
     connect(eightButton_, SIGNAL(clicked(std::string, std::string)), this, SLOT(onEight()));
     connect(nineButton_, SIGNAL(clicked(std::string, std::string)), this, SLOT(onNine()));
+
+    connect(plusButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(minusButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(multiplyButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(divideButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(sinButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(cosButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(tanButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    connect(powButton_, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+
+    connect(shiftButton_, SIGNAL(clicked(std::string,std::string)), parent_, SIGNAL(shiftPressed()));
+
 }
 
-void InputWidget::InputWidgetImpl::layoutButtons(QGridLayout* layout)
+void InputWidget::InputWidgetImpl::layoutButtons()
 {
-    layout->addWidget(enterButton_, 4, 0);
-    layout->addWidget(eexButton_, 4, 1);
-    layout->addWidget(backspaceButton_, 4, 2);
-    layout->addWidget(sevenButton_, 3, 0);
-    layout->addWidget(eightButton_, 3, 1);
-    layout->addWidget(nineButton_, 3, 2);
-    layout->addWidget(fourButton_, 2, 0);
-    layout->addWidget(fiveButton_, 2, 1);
-    layout->addWidget(sixButton_, 2, 2);
-    layout->addWidget(oneButton_, 1, 0);
-    layout->addWidget(twoButton_, 1, 1);
-    layout->addWidget(threeButton_, 1, 2);
-    layout->addWidget(zeroButton_, 0, 0);
-    layout->addWidget(decimalButton_, 0, 1);
-    layout->addWidget(plusMinusButton_, 0, 2);
+    layout_->addWidget(enterButton_, 4, 0);
+    layout_->addWidget(eexButton_, 4, 1);
+    layout_->addWidget(backspaceButton_, 4, 2);
+    layout_->addWidget(sevenButton_, 3, 0);
+    layout_->addWidget(eightButton_, 3, 1);
+    layout_->addWidget(nineButton_, 3, 2);
+    layout_->addWidget(fourButton_, 2, 0);
+    layout_->addWidget(fiveButton_, 2, 1);
+    layout_->addWidget(sixButton_, 2, 2);
+    layout_->addWidget(oneButton_, 1, 0);
+    layout_->addWidget(twoButton_, 1, 1);
+    layout_->addWidget(threeButton_, 1, 2);
+    layout_->addWidget(zeroButton_, 0, 0);
+    layout_->addWidget(decimalButton_, 0, 1);
+    layout_->addWidget(plusMinusButton_, 0, 2);
+    layout_->addWidget(plusButton_, 0, 3);
+    layout_->addWidget(minusButton_, 1, 3);
+    layout_->addWidget(multiplyButton_, 2, 3);
+    layout_->addWidget(divideButton_, 3, 3);
+    layout_->addWidget(sinButton_, 5, 0);
+    layout_->addWidget(cosButton_, 5, 1);
+    layout_->addWidget(tanButton_, 5, 2);
+    layout_->addWidget(powButton_, 5, 3);
+    layout_->addWidget(shiftButton_, 4, 3);
 
     return;
 }
 
+void InputWidget::InputWidgetImpl::addCommandButton(const string& dispPrimaryCmd, const string& primaryCmd,
+const string& dispShftCmd, const string& shftCmd)
+{
+    int nCols{ layout_->columnCount() };
+    int nRows{ layout_->rowCount() };
+    int atCol{ nAddedButtons_ % nCols };
+    int atRow{(atCol == 0 ? nRows : nRows - 1) };
+
+    auto cb = new CommandButton{dispPrimaryCmd, primaryCmd, dispShftCmd, shftCmd};
+    connect(cb, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    layout_->addWidget(cb, atRow, atCol);
+
+    nAddedButtons_++;
+
+    return;
+}
+
+void InputWidget::InputWidgetImpl::setupFinalButtons()
+{
+    int atRow = layout_->rowCount();
+    auto undo = new CommandButton{"undo", "undo", this};
+    connect(undo, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    undo->registerShortcut( QKeySequence{QKeySequence::Undo} );
+    layout_->addWidget(undo, atRow, 0);
+
+    auto redo = new CommandButton{"redo", "redo", this};
+    connect(redo, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(commandEntered(std::string, std::string)));
+    layout_->addWidget(redo, atRow, 1);
+    redo->registerShortcut( QKeySequence{QKeySequence::Redo} );
+
+    auto procedure = new CommandButton{"proc", "proc", this};
+    connect(procedure, SIGNAL(clicked(std::string, std::string)), parent_, SIGNAL(procedurePressed()));
+    layout_->addWidget(procedure, atRow, 2);
+    procedure->registerToolTip("Open a dialog to enter a procedure");
+}
+
 void InputWidget::InputWidgetImpl::onEex()
 {
-    emit parent_.characterEntered('e');
+    emit parent_->characterEntered('e');
 }
 
 void InputWidget::InputWidgetImpl::onDecimal()
 {
-    emit parent_.characterEntered('.');
+    emit parent_->characterEntered('.');
 }
 
 void InputWidget::InputWidgetImpl::onPlusMinus()
 {
-    emit parent_.plusMinusPressed();
+    emit parent_->plusMinusPressed();
 }
 
 void InputWidget::InputWidgetImpl::onZero()
 {
-    emit parent_.characterEntered('0');
+    emit parent_->characterEntered('0');
 }
 
 void InputWidget::InputWidgetImpl::onOne()
 {
-    emit parent_.characterEntered('1');
+    emit parent_->characterEntered('1');
 }
 
 void InputWidget::InputWidgetImpl::onTwo()
 {
-    emit parent_.characterEntered('2');
+    emit parent_->characterEntered('2');
 }
 
 void InputWidget::InputWidgetImpl::onThree()
 {
-    emit parent_.characterEntered('3');
+    emit parent_->characterEntered('3');
 }
 
 void InputWidget::InputWidgetImpl::onFour()
 {
-    emit parent_.characterEntered('4');
+    emit parent_->characterEntered('4');
 }
 
 void InputWidget::InputWidgetImpl::onFive()
 {
-    emit parent_.characterEntered('5');
+    emit parent_->characterEntered('5');
 }
 
 void InputWidget::InputWidgetImpl::onSix()
 {
-    emit parent_.characterEntered('6');
+    emit parent_->characterEntered('6');
 }
 
 void InputWidget::InputWidgetImpl::onSeven()
 {
-    emit parent_.characterEntered('7');
+    emit parent_->characterEntered('7');
 }
 
 void InputWidget::InputWidgetImpl::onEight()
 {
-    emit parent_.characterEntered('8');
+    emit parent_->characterEntered('8');
 }
 
 void InputWidget::InputWidgetImpl::onNine()
 {
-    emit parent_.characterEntered('9');
+    emit parent_->characterEntered('9');
 }
 
-InputWidget::InputWidget(QGridLayout* layout, QWidget* parent)
+InputWidget::InputWidget(QWidget* parent)
 : QWidget{parent}
+, pimpl_( std::make_unique<InputWidgetImpl>(this) )
+{ }
+
+InputWidget::~InputWidget()
+{ }
+
+void InputWidget::addCommandButton(const string& dispPrimaryCmd, const string& primaryCmd, const string& dispShftCmd, const string& shftCmd)
 {
-    pimpl_ = new InputWidgetImpl{layout, this};
+    pimpl_->addCommandButton(dispPrimaryCmd, primaryCmd, dispShftCmd, shftCmd);
+
+    return;
+}
+
+void InputWidget::setupFinalButtons()
+{
+    pimpl_->setupFinalButtons();
+
+    return;
+}
+
+QGridLayout*InputWidget::getLayout()
+{
+    return pimpl_->getLayout();
 }
 
 }
