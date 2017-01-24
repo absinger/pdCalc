@@ -101,6 +101,7 @@ InputWidget::InputWidgetImpl::InputWidgetImpl(pdCalc::InputWidget* parent)
     setupShortcuts();
     makeConnections();
     layout_ = new QGridLayout;
+    layout_->setOriginCorner(Qt::BottomLeftCorner);
     layoutButtons();
 
     return;
@@ -351,7 +352,9 @@ void InputWidget::InputWidgetImpl::onNine()
 InputWidget::InputWidget(QWidget* parent)
 : QWidget{parent}
 , pimpl_( std::make_unique<InputWidgetImpl>(this) )
-{ }
+{
+    setLayout( pimpl_->getLayout() );
+}
 
 InputWidget::~InputWidget()
 { }
@@ -368,11 +371,6 @@ void InputWidget::setupFinalButtons()
     pimpl_->setupFinalButtons();
 
     return;
-}
-
-QGridLayout*InputWidget::getLayout()
-{
-    return pimpl_->getLayout();
 }
 
 }

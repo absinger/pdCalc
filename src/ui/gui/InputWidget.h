@@ -39,7 +39,6 @@ public:
         const std::string& dispShftCmd, const std::string& shftCmd);
 
     void setupFinalButtons();
-    QGridLayout* getLayout();
 
 signals:
     void characterEntered(char c);

@@ -25,8 +25,6 @@
 #include <memory>
 #include <QGridLayout>
 #include <iostream>
-#include "CommandButton.h"
-#include <QValidator>
 #include "LookAndFeel.h"
 #include "StoredProcedureDialog.h"
 #include <sstream>
@@ -60,7 +58,6 @@ private slots:
 private:
     void connectInputToModel();
     void doLayout();
-    void setupShift();
 
     MainWindow& parent_;
     int nLinesStack_;
@@ -81,8 +78,6 @@ MainWindow::MainWindowImpl::MainWindowImpl(MainWindow* parent)
 
     inputWidget_ = new InputWidget{this};
 
-    setupShift();
-
     doLayout();
 
     connectInputToModel();
@@ -92,21 +87,8 @@ void MainWindow::MainWindowImpl::doLayout()
 {
     auto vblayout = new QVBoxLayout{this};
     vblayout->addWidget(display_);
-    auto gridLayout = inputWidget_->getLayout();
-    vblayout->addLayout(gridLayout);
-    gridLayout->setOriginCorner(Qt::BottomLeftCorner);
+    vblayout->addWidget(inputWidget_);
     vblayout->addStretch();
-}
-
-void MainWindow::MainWindowImpl::setupShift()
-{
-    auto shiftButton = new CommandButton{"Shift", "", this};
-    inputWidget_->getLayout()->addWidget(shiftButton, 4, 3);
-    connect(shiftButton, SIGNAL(clicked(std::string,std::string)), guiModel_, SLOT(onShift()));
-    shiftButton->registerShortcut(Qt::Key_S);
-    shiftButton->setButtonTextColor( LookAndFeel::Instance().getShiftColor() );
-
-    return;
 }
 
 void MainWindow::MainWindowImpl::showMessage(const string& m)
