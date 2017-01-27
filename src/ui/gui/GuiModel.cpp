@@ -228,7 +228,7 @@ void GuiModel::GuiModelImpl::onCommandEntered(string primaryCmd, string shiftCmd
     }
 
     state_.shiftState = ShiftState::Unshifted;
-    parent_.modelChanged();
+    emit parent_.modelChanged();
 
     emit parent_.commandEntered(cmd);
 
