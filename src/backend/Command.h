@@ -147,8 +147,8 @@ private:
     virtual const char* checkPluginPreconditions() const noexcept = 0;
     virtual PluginCommand* clonePluginImpl() const noexcept = 0;
 
-    void checkPreconditionsImpl() const override;
-    PluginCommand* cloneImpl() const override;
+    void checkPreconditionsImpl() const override final;
+    PluginCommand* cloneImpl() const override final;
 };
 
 // This shows an entirely different design using function and lambdas.
