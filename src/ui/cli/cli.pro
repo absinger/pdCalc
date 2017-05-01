@@ -12,4 +12,4 @@ win32:DESTDIR = $$HOME/bin
 HEADERS += Cli.h
 SOURCES += Cli.cpp
 
-win32:LIBS += -L$$HOME/bin -lpdCalcUtilties1 -lpdCalcBackend1
+win32:LIBS += -L$$HOME/bin -lpdCalcUtilities1 -lpdCalcBackend1

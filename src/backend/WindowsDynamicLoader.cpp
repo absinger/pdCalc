@@ -19,7 +19,7 @@
 #include "WindowsDynamicLoader.h"
 #include <cstdlib>
 #include <vector>
-#include "shared/Exception.h"
+#include "utilities/Exception.h"
 
 using std::wstring;
 using std::string;

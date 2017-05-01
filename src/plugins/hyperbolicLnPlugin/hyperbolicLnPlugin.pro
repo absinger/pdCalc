@@ -21,4 +21,4 @@ win32{
   OUT ~= s,/,\\,g
   QMAKE_PRE_LINK+=copy $$IN $$OUT
 }
-win32:LIBS += -L$$HOME/bin -lpdCalcShared1 -lpdCalcBackend1
+win32:LIBS += -L$$HOME/bin -lpdCalcUtilities1 -lpdCalcBackend1
