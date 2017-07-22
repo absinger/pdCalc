@@ -12,13 +12,7 @@ QT += widgets
 HEADERS += HyperbolicLnPlugin.h
 SOURCES += HyperbolicLnPlugin.cpp
 
-unix:QMAKE_PRE_LINK+=cp $$PWD/../plugins.pdp.unix $$HOME/bin/plugins.pdp
+unix:QMAKE_PRE_LINK+=$(COPY_FILE) $$PWD/../plugins.pdp.unix $$HOME/bin/plugins.pdp
+win32:QMAKE_PRE_LINK+=$(COPY_FILE) $$shell_path($$PWD/../plugins.pdp.win) $$shell_path($$HOME/bin/plugins.pdp)
 
-win32{
-  IN = $$PWD/../plugins.pdp.win
-  IN ~= s,/,\\,g
-  OUT = $$HOME/bin/plugins.pdp
-  OUT ~= s,/,\\,g
-  QMAKE_PRE_LINK+=copy $$IN $$OUT
-}
 win32:LIBS += -L$$HOME/bin -lpdCalcUtilities1 -lpdCalcBackend1
