@@ -20,7 +20,7 @@
 #define APP_OBSERVERS_H
 
 #include "utilities/Observer.h"
-#include "backend/CommandDispatcher.h"
+#include "CommandDispatcher.h"
 
 namespace pdCalc {
 

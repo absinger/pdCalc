@@ -22,7 +22,7 @@
 #include <string>
 #include <fstream>
 #include "ui/cli/Cli.h"
-#include "AppObservers.h"
+#include "backend/AppObservers.h"
 #include "backend/CommandDispatcher.h"
 #include <memory>
 #include "backend/Stack.h"

@@ -23,7 +23,8 @@ HEADERS += Stack.h \
     DynamicLoader.h \
     Plugin.h \
     PlatformFactory.h \
-    StackPluginInterface.h
+    StackPluginInterface.h \
+    AppObservers.h
 
 unix:HEADERS += PosixDynamicLoader.h \
     PosixFactory.h
@@ -42,6 +43,7 @@ SOURCES += Stack.cpp \
     PluginLoader.cpp \
     DynamicLoader.cpp \
     PlatformFactory.cpp \
+    AppObservers.cpp
 
 unix:SOURCES += PosixDynamicLoader.cpp \
                 PosixFactory.cpp
@@ -49,4 +51,5 @@ unix:SOURCES += PosixDynamicLoader.cpp \
 win32:SOURCES += WindowsDynamicLoader.cpp \
                  WindowsFactory.cpp
 
+unix:LIBS += -ldl
 win32:LIBS += -L$$HOME/bin -lpdCalcUtilities1

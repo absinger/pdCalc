@@ -19,7 +19,7 @@
 #include "AppObservers.h"
 #include "utilities/Exception.h"
 #include "ui/cli/Cli.h"
-#include "backend/Stack.h"
+#include "Stack.h"
 #include "utilities/UserInterface.h"
 #include <vector>
 #include <sstream>
